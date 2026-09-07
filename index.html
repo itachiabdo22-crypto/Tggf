@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>موقع خاص لكِ يا رانيا ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ff3385;
+      --accent-glow: rgba(255, 51, 133, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    body {
+      background: #080108;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      overflow-x: hidden;
+    }
+
+    /* تأثير القلوب المتساقطة */
+    .heart-fall {
+      position: fixed;
+      top: -20px;
+      user-select: none;
+      pointer-events: none;
+      animation: fall linear infinite;
+      z-index: 1;
+      opacity: 0.7;
+    }
+
+    @keyframes fall {
+      to { transform: translateY(105vh) rotate(360deg); }
+    }
+
+    /* إطار الشاشة */
+    .app-card {
+      width: 100%;
+      max-width: 410px;
+      position: relative;
+      border-radius: 30px;
+      overflow: hidden;
+      background: #140311;
+      border: 2.5px solid var(--primary);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.9), 0 0 25px var(--accent-glow);
+      z-index: 10;
+    }
+
+    .slide {
+      display: none;
+      position: relative;
+      width: 100%;
+      opacity: 0;
+      transform: scale(0.97);
+      transition: all 0.4s ease-in-out;
+    }
+
+    .slide.active {
+      display: block;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .slide img {
+      width: 100%;
+      height: auto;
+      display: block;
+      user-select: none;
+    }
+
+    /* حقل كلمة السر فوق خانة الكتابة بالصورة */
+    .input-box {
+      position: absolute;
+      top: 58%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 78%;
+      padding: 12px 18px;
+      border-radius: 20px;
+      border: 2px solid var(--primary);
+      background: rgba(10, 2, 10, 0.85);
+      color: #fff;
+      text-align: center;
+      font-size: 1.05rem;
+      outline: none;
+    }
+
+    /* مناطق الضغط الشفافة فوق عناصر الصور */
+    .touch-area {
+      position: absolute;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-radius: 20px;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .touch-area:active {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* زر العثور على زر فتح الرسالة في الشاشة 1 */
+    .btn-login {
+      top: 70%;
+      left: 11%;
+      width: 78%;
+      height: 10%;
+    }
+
+    /* مناطق الضغط للأسئلة (نعم / لا) */
+    .btn-yes-spot {
+      top: 52%;
+      right: 12%;
+      width: 36%;
+      height: 12%;
+    }
+
+    .btn-no-spot {
+      top: 52%;
+      left: 12%;
+      width: 36%;
+      height: 12%;
+    }
+
+    /* منطقة الضغط للهدية الكبيرة في الشاشة 6 */
+    .gift-box-spot {
+      top: 35%;
+      left: 15%;
+      width: 70%;
+      height: 45%;
+    }
+
+    /* منطقة التنقل العام للتالي بالضغط السفلي */
+    .next-full-bottom {
+      bottom: 2%;
+      left: 5%;
+      width: 90%;
+      height: 15%;
+    }
+
+    .error-toast {
+      position: absolute;
+      top: 67%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ff4d4d;
+      font-size: 0.85rem;
+      font-weight: bold;
+      display: none;
+      background: rgba(0,0,0,0.9);
+      padding: 4px 14px;
+      border-radius: 12px;
+      border: 1px solid #ff4d4d;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="heartContainer"></div>
+
+  <div class="app-card">
+
+    <!-- الشاشة 1: كلمة السر -->
+    <div id="slide1" class="slide active">
+      <img src="bg1.jpg.jpg" alt="شاشة الدخول">
+      <input type="password" id="passInput" class="input-box" placeholder="أدخلي كلمة السر...">
+      <div id="errorToast" class="error-toast">كلمة السر غير صحيحة 💖</div>
+      <button class="touch-area btn-login" onclick="validatePassword()"></button>
+    </div>
+
+    <!-- الشاشة 2: الترحيب بالألوان -->
+    <div id="slide2" class="slide">
+      <img src="bg2.jpg.jpg" alt="ترحيب">
+      <button class="touch-area next-full-bottom" onclick="goToSlide(3)"></button>
+    </div>
+
+    <!-- الشاشة 3: الرسالة النصية -->
+    <div id="slide3" class="slide">
+      <img src="bg3.jpg.jpg" alt="الرسالة">
+      <button class="touch-area next-full-bottom" onclick="goToSlide(4)"></button>
+    </div>
+
+    <!-- الشاشة 4: هل تريدين رؤية مفاجأة؟ -->
+    <div id="slide4" class="slide">
+      <img src="bg4.jpg.jpg" alt="سؤال المفاجأة">
+      <button class="touch-area btn-yes-spot" onclick="goToSlide(5)"></button>
+      <button class="touch-area btn-no-spot" onclick="alert('لا يوجد خيار لا 😜')"></button>
+    </div>
+
+    <!-- الشاشة 5: هل أنتِ متأكدة؟ -->
+    <div id="slide5" class="slide">
+      <img src="bg5.jpg.jpg" alt="التأكيد">
+      <button class="touch-area btn-yes-spot" onclick="goToSlide(6)"></button>
+      <button class="touch-area btn-no-spot" onclick="alert('اضغطي نعم 😜')"></button>
+    </div>
+
+    <!-- الشاشة 6: الهدية (الضغط المباشر على العلبة) -->
+    <div id="slide6" class="slide">
+      <img src="bg6.jpg.jpg" alt="الهدية">
+      <button class="touch-area gift-box-spot" onclick="goToSlide(7)"></button>
+    </div>
+
+    <!-- الشاشة 7: معرض الصور الأول -->
+    <div id="slide7" class="slide">
+      <img src="bg7.jpg.jpg" alt="المعرض 1">
+      <button class="touch-area next-full-bottom" onclick="goToSlide(8)"></button>
+    </div>
+
+    <!-- الشاشة 8: معرض الصور الثاني -->
+    <div id="slide8" class="slide">
+      <img src="bg8.jpg.jpg" alt="المعرض 2">
+      <button class="touch-area next-full-bottom" onclick="goToSlide(9)"></button>
+    </div>
+
+    <!-- الشاشة 9: الغلاف النهائي -->
+    <div id="slide9" class="slide">
+      <img src="bg9.jpg.jpg" alt="الغلاف الأخير">
+    </div>
+
+  </div>
+
+  <script>
+    const SECRET_KEY = "الحوى";
+
+    function validatePassword() {
+      const input = document.getElementById('passInput').value.trim();
+      const errorToast = document.getElementById('errorToast');
+
+      if (input === SECRET_KEY) {
+        errorToast.style.display = 'none';
+        goToSlide(2);
+      } else {
+        errorToast.style.display = 'block';
+      }
+    }
+
+    function goToSlide(slideNum) {
+      const slides = document.querySelectorAll('.slide');
+      slides.forEach(slide => slide.classList.remove('active'));
+
+      const targetSlide = document.getElementById('slide' + slideNum);
+      if (targetSlide) {
+        targetSlide.classList.add('active');
+      }
+    }
+
+    function initHearts() {
+      const container = document.getElementById('heartContainer');
+      const icons = ['💖', '🌸', '✨', '🌹'];
+      for (let i = 0; i < 18; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart-fall';
+        heart.innerText = icons[Math.floor(Math.random() * icons.length)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+        heart.style.animationDelay = Math.random() * 4 + 's';
+        container.appendChild(heart);
+      }
+    }
+
+    initHearts();
+  </script>
+</body>
+</html>
